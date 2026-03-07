@@ -1,0 +1,14 @@
+<h2>Library Books</h2>
+
+<a href="/add/">Add Book</a>
+
+<ul>
+{% for book in books %}
+    <li>
+        {{ book.title }} - {{ book.author }} ({{ book.quantity }})
+        <a href="/edit/{{ book.id }}/">Edit</a>
+        <a href="/delete/{{ book.id }}/">Delete</a>
+        <a href="/borrow/">Borrow Book</a>
+    </li>
+{% endfor %}
+</ul>
