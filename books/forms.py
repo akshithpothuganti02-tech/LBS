@@ -1,25 +1,27 @@
 from django import forms
 from .models import Book, Borrow
 
+
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = ['title', 'author', 'quantity']
-        from .models import Borrow
+
 
 class BorrowForm(forms.ModelForm):
     class Meta:
         model = Borrow
-        fields = ['user_name', 'book']
-        from django.core.exceptions import ValidationError
+        fields = ['user_name', 'book', 'quantity']
 
-class BorrowForm(forms.ModelForm):
-    class Meta:
-        model = Borrow
-        fields = ['user_name', 'book']
+    def clean(self):
+        cleaned_data = super().clean()
+        book = cleaned_data.get("book")
+        quantity = cleaned_data.get("quantity")
 
-    def clean_book(self):
-        book = self.cleaned_data['book']
-        if book.quantity <= 0:
-            raise forms.ValidationError("Book not available")
-        return book
+        if book and quantity:
+            if quantity > book.quantity:
+                raise forms.ValidationError(
+                    f"Only {book.quantity} books available."
+                )
+
+        return cleaned_data

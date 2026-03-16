@@ -2,8 +2,17 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    {{ form.user_name.label }} <br>
+    {{ form.user_name }} <br><br>
+
+    {{ form.book.label }} <br>
+    {{ form.book }} <br><br>
+
+    {{ form.quantity.label }} <br>
+    {{ form.quantity }} <br><br>
+
     <button type="submit">Borrow</button>
 </form>
 
-<a href="/">Back</a>
+<a href="{% url 'book_list' %}">Back</a>

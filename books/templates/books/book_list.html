@@ -1,14 +1,40 @@
 <h2>Library Books</h2>
 
-<a href="/add/">Add Book</a>
+<a href="{% url 'add_book' %}">Add Book</a>
+<a href="{% url 'borrow_book' %}" style="margin-left: 10px;">Borrow Book</a>
+
+<hr>
 
 <ul>
-{% for book in books %}
-    <li>
-        {{ book.title }} - {{ book.author }} ({{ book.quantity }})
-        <a href="/edit/{{ book.id }}/">Edit</a>
-        <a href="/delete/{{ book.id }}/">Delete</a>
-        <a href="/borrow/">Borrow Book</a>
-    </li>
-{% endfor %}
+    {% for book in books %}
+        <li>
+            <strong>{{ book.title }}</strong> - {{ book.author }} ({{ book.quantity }} copies)
+            <a href="{% url 'edit_book' book.id %}">Edit</a>
+            <a href="{% url 'delete_book' book.id %}">Delete</a>
+        </li>
+    {% empty %}
+        <li>No books available.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Borrow Records</h3>
+<ul>
+    {% for borrow in borrows %}
+        <li>
+            {{ borrow.user_name }} borrowed
+            <strong>{{ borrow.book.title }}</strong>
+            ({{ borrow.quantity }} copies)
+
+            {% if borrow.returned %}
+                - Returned
+            {% else %}
+                - Not Returned
+                <a href="{% url 'return_book' borrow.id %}">Return</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No borrow records found.</li>
+    {% endfor %}
 </ul>
