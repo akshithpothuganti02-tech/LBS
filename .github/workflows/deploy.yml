@@ -45,6 +45,9 @@ jobs:
     needs: test
 
     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
       - name: Deploy to EC2 with SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
