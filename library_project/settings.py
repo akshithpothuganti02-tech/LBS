@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ["YOUR_EC2_PUBLIC_IP", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["54.160.131.41", "127.0.0.1", "localhost"]
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
