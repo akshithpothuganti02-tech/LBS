@@ -1,4 +1,4 @@
-name: Django CI/CD to EC2
+name: Django CI/CD Pipeline
 
 on:
   push:
@@ -6,32 +6,34 @@ on:
       - main
 
 jobs:
+
   ci:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install flake8 bandit
 
-      - name: Run linting (flake8)
+      - name: Code Quality Check (flake8)
         run: flake8 . || true
 
-      - name: Run security scan (bandit)
+      - name: Security Scan (bandit)
         run: bandit -r . -x ./venv || true
 
-      - name: Run Django checks
+      - name: Django System Check
         run: python manage.py check
+
 
   cd:
     runs-on: ubuntu-latest
@@ -46,8 +48,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
+
             cd /home/ubuntu/LBS
-            git pull origin main
+
+            # Force sync with GitHub
+            git fetch origin
+            git reset --hard origin/main
 
             # Activate virtual environment
             source venv/bin/activate
@@ -56,9 +62,11 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
 
-            # Django commands
+            # Run migrations
             python manage.py migrate
+
+            # Collect static files
             python manage.py collectstatic --noinput
 
-            # Restart server
+            # Restart Gunicorn
             sudo systemctl restart gunicorn
