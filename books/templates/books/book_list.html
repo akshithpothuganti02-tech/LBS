@@ -31,7 +31,10 @@
                 - Returned
             {% else %}
                 - Not Returned
-                <a href="{% url 'return_book' borrow.id %}">Return</a>
+                <form method="post" action="{% url 'return_book' borrow.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Return</button>
+                </form>
             {% endif %}
         </li>
     {% empty %}

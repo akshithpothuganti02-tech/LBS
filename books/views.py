@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
+
 from .models import Book, Borrow
 from .forms import BookForm, BorrowForm
 
@@ -61,8 +63,7 @@ def borrow_book(request):
 
     return render(request, 'books/borrow_book.html', {'form': form})
 
-
-
+@require_POST
 def return_book(request, id):
     borrow = get_object_or_404(Borrow, id=id)
 
