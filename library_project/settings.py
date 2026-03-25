@@ -25,8 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-only-key")
 
-# Default to safe production values and let env vars override them on EC2.
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+# Default to DEBUG=True locally unless the environment explicitly turns it off.
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 ALLOWED_HOSTS = ["*"]
 
 STATIC_URL = "/static/"
