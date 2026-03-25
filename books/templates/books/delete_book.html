@@ -1,10 +1,43 @@
-<h2>Delete Book</h2>
+{% extends "books/base.html" %}
 
-<p>Are you sure you want to delete "<strong>{{ book.title }}</strong>"?</p>
+{% block title %}Delete Book{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, Delete</button>
-</form>
+{% block page %}
+<section class="hero">
+    <div class="hero-top">
+        <div>
+            <span class="eyebrow">Delete Record</span>
+            <h1>Remove a book from the catalog.</h1>
+            <p>
+                Confirm this action carefully. Deleting a title removes it from your active
+                inventory view.
+            </p>
+        </div>
+        <div class="hero-actions">
+            <a class="button button-secondary" href="{% url 'book_list' %}">Back to Dashboard</a>
+        </div>
+    </div>
+</section>
 
-<a href="{% url 'book_list' %}">Cancel</a>
+<section class="panel form-shell" style="margin-top: 24px;">
+    <div class="panel-inner">
+        <div class="section-heading">
+            <div>
+                <h2>Delete Confirmation</h2>
+                <p>Review the selected title before removing it permanently.</p>
+            </div>
+        </div>
+
+        <p class="danger-copy">
+            Are you sure you want to delete <strong>"{{ book.title }}"</strong> by
+            <strong>{{ book.author }}</strong> from the library catalog?
+        </p>
+
+        <form method="post" class="row-actions">
+            {% csrf_token %}
+            <button type="submit" class="button-danger">Yes, Delete Book</button>
+            <a class="button button-secondary" href="{% url 'book_list' %}">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,43 +1,117 @@
-<h2>Library Books </h2>
+{% extends "books/base.html" %}
 
-<a href="{% url 'add_book' %}">Add Book</a>
-<a href="{% url 'borrow_book' %}" style="margin-left: 10px;">Borrow Book</a>
+{% block title %}Library Dashboard{% endblock %}
 
-<hr>
+{% block page %}
+<section class="hero">
+    <div class="hero-top">
+        <div>
+            <span class="eyebrow">Library Dashboard</span>
+            <h1>Manage your collection with clarity.</h1>
+            <p>
+                Track books, monitor borrow activity, and keep inventory accurate from a
+                single workspace designed for day-to-day library operations.
+            </p>
+        </div>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{% url 'add_book' %}">Add Book</a>
+            <a class="button button-secondary" href="{% url 'borrow_book' %}">Borrow Book</a>
+        </div>
+    </div>
 
-<ul>
-    {% for book in books %}
-        <li>
-            <strong>{{ book.title }}</strong> - {{ book.author }} ({{ book.quantity }} copies)
-            <a href="{% url 'edit_book' book.id %}">Edit</a>
-            <a href="{% url 'delete_book' book.id %}">Delete</a>
-        </li>
-    {% empty %}
-        <li>No books available.</li>
-    {% endfor %}
-</ul>
+    <div class="stats">
+        <div class="stat-card">
+            <span>Total Titles</span>
+            <strong>{{ books|length }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Borrow Records</span>
+            <strong>{{ borrows|length }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Collection Status</span>
+            <strong>{% if books %}Active{% else %}Empty{% endif %}</strong>
+        </div>
+    </div>
+</section>
 
-<hr>
+<div class="content-grid">
+    <section class="panel">
+        <div class="panel-inner">
+            <div class="section-heading">
+                <div>
+                    <h2>Book Collection</h2>
+                    <p>Update stock, edit details, and remove outdated entries.</p>
+                </div>
+            </div>
 
-<h3>Borrow Records</h3>
-<ul>
-    {% for borrow in borrows %}
-        <li>
-            {{ borrow.user_name }} borrowed
-            <strong>{{ borrow.book.title }}</strong>
-            ({{ borrow.quantity }} copies)
-
-            {% if borrow.returned %}
-                - Returned
+            {% if books %}
+                <ul class="book-list">
+                    {% for book in books %}
+                        <li class="book-card">
+                            <div>
+                                <h3>{{ book.title }}</h3>
+                                <p class="meta">
+                                    Author: {{ book.author }}<br>
+                                    Available copies: {{ book.quantity }}
+                                </p>
+                            </div>
+                            <div class="row-actions">
+                                <a class="button button-secondary" href="{% url 'edit_book' book.id %}">Edit</a>
+                                <a class="button button-danger" href="{% url 'delete_book' book.id %}">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% else %}
-                - Not Returned
-                <form method="post" action="{% url 'return_book' borrow.id %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">Return</button>
-                </form>
+                <div class="empty-state">
+                    No books have been added yet. Start by adding your first title.
+                </div>
             {% endif %}
-        </li>
-    {% empty %}
-        <li>No borrow records found.</li>
-    {% endfor %}
-</ul>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-inner">
+            <div class="section-heading">
+                <div>
+                    <h2>Borrow Activity</h2>
+                    <p>Review loan history and mark borrowed books as returned.</p>
+                </div>
+            </div>
+
+            {% if borrows %}
+                <ul class="record-list">
+                    {% for borrow in borrows %}
+                        <li class="record-card">
+                            <div>
+                                <h3>{{ borrow.user_name }}</h3>
+                                <p class="meta">
+                                    Borrowed: {{ borrow.book.title }}<br>
+                                    Quantity: {{ borrow.quantity }}<br>
+                                    Date: {{ borrow.borrow_date|date:"M d, Y H:i" }}
+                                </p>
+                                {% if borrow.returned %}
+                                    <span class="badge badge-success">Returned</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Not Returned</span>
+                                {% endif %}
+                            </div>
+                            {% if not borrow.returned %}
+                                <form class="inline-form" method="post" action="{% url 'return_book' borrow.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Mark as Returned</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-state">
+                    No borrow records found yet. Borrowed books will appear here.
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

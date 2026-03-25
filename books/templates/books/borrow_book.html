@@ -1,18 +1,85 @@
-<h2>Borrow Book</h2>
+{% extends "books/base.html" %}
 
-<form method="post">
-    {% csrf_token %}
+{% block title %}Borrow Book{% endblock %}
 
-    {{ form.user_name.label }} <br>
-    {{ form.user_name }} <br><br>
+{% block page %}
+<section class="hero">
+    <div class="hero-top">
+        <div>
+            <span class="eyebrow">Borrow Workflow</span>
+            <h1>Register a new borrowing request.</h1>
+            <p>
+                Assign a book to a borrower, validate stock levels, and keep your lending
+                records organized in real time.
+            </p>
+        </div>
+        <div class="hero-actions">
+            <a class="button button-secondary" href="{% url 'book_list' %}">Back to Dashboard</a>
+        </div>
+    </div>
+</section>
 
-    {{ form.book.label }} <br>
-    {{ form.book }} <br><br>
+<section class="panel form-shell" style="margin-top: 24px;">
+    <div class="panel-inner">
+        <div class="section-heading">
+            <div>
+                <h2>Borrow Details</h2>
+                <p>Complete the form below to issue books to a borrower.</p>
+            </div>
+        </div>
 
-    {{ form.quantity.label }} <br>
-    {{ form.quantity }} <br><br>
+        {% if form.non_field_errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    <button type="submit">Borrow</button>
-</form>
+        <form method="post" class="form-grid">
+            {% csrf_token %}
 
-<a href="{% url 'book_list' %}">Back</a>
+            <div class="field-group">
+                <label for="{{ form.user_name.id_for_label }}">Borrower Name</label>
+                {{ form.user_name }}
+                {% if form.user_name.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.user_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.book.id_for_label }}">Book</label>
+                {{ form.book }}
+                {% if form.book.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.book.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                {{ form.quantity }}
+                {% if form.quantity.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.quantity.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="row-actions">
+                <button type="submit">Confirm Borrow</button>
+                <a class="button button-secondary" href="{% url 'book_list' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

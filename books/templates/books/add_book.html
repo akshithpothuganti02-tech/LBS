@@ -1,9 +1,85 @@
-<h2>{{ page_title }}</h2>
+{% extends "books/base.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+{% block title %}{{ page_title }}{% endblock %}
 
-<a href="{% url 'book_list' %}">Back</a>
+{% block page %}
+<section class="hero">
+    <div class="hero-top">
+        <div>
+            <span class="eyebrow">Book Management</span>
+            <h1>{{ page_title }}</h1>
+            <p>
+                Keep your catalog accurate with clear details for every title in the
+                collection.
+            </p>
+        </div>
+        <div class="hero-actions">
+            <a class="button button-secondary" href="{% url 'book_list' %}">Back to Dashboard</a>
+        </div>
+    </div>
+</section>
+
+<section class="panel form-shell" style="margin-top: 24px;">
+    <div class="panel-inner">
+        <div class="section-heading">
+            <div>
+                <h2>Book Details</h2>
+                <p>Fill out the fields below and save the record.</p>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post" class="form-grid">
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label for="{{ form.title.id_for_label }}">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.title.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.author.id_for_label }}">Author</label>
+                {{ form.author }}
+                {% if form.author.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.author.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                {{ form.quantity }}
+                {% if form.quantity.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.quantity.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="row-actions">
+                <button type="submit">Save Book</button>
+                <a class="button button-secondary" href="{% url 'book_list' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
