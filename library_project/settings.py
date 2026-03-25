@@ -27,9 +27,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-only-key")
 
 # Default to safe production values and let env vars override them on EC2.
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Application definition
@@ -119,5 +119,3 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-
-STATIC_URL = "static/"
