@@ -1,0 +1,85 @@
+{% extends "books/base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block page %}
+<section class="hero">
+    <div class="hero-top">
+        <div>
+            <span class="eyebrow">New Account</span>
+            <h1>Create your library access account.</h1>
+            <p>
+                Register to access the library dashboard, manage books, and track
+                borrowing activity securely.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="panel form-shell" style="margin-top: 24px;">
+    <div class="panel-inner">
+        <div class="section-heading">
+            <div>
+                <h2>Register</h2>
+                <p>Choose a username and a strong password to get started.</p>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post" class="form-grid">
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.help_text %}
+                    <div class="helper-text">{{ form.password1.help_text|safe }}</div>
+                {% endif %}
+                {% if form.password1.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <ul class="field-errors">
+                        {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="row-actions">
+                <button type="submit">Create Account</button>
+                <a class="button button-secondary" href="{% url 'login' %}">Back to Login</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

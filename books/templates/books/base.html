@@ -43,6 +43,37 @@
             margin: 32px auto;
         }
 
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 999px;
+            background: rgba(255, 250, 242, 0.8);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .topbar-brand {
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--brand-dark);
+            text-decoration: none;
+        }
+
+        .topbar-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
         .hero {
             position: relative;
             overflow: hidden;
@@ -275,6 +306,11 @@
             margin: 0;
         }
 
+        .inline-form button {
+            min-height: 40px;
+            padding: 0 16px;
+        }
+
         .form-shell {
             max-width: 720px;
         }
@@ -356,10 +392,16 @@
                 padding: 22px;
             }
 
+            .topbar {
+                border-radius: 20px;
+                padding: 14px;
+            }
+
             .book-card,
             .record-card,
             .hero-top,
-            .section-heading {
+            .section-heading,
+            .topbar {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -372,6 +414,22 @@
 </head>
 <body>
     <main class="page-shell">
+        <header class="topbar">
+            <a class="topbar-brand" href="{% if user.is_authenticated %}{% url 'book_list' %}{% else %}{% url 'login' %}{% endif %}">
+                Library Management
+            </a>
+            <div class="topbar-meta">
+                {% if user.is_authenticated %}
+                    <span>Signed in as <strong>{{ user.username }}</strong></span>
+                    <form class="inline-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Log Out</button>
+                    </form>
+                {% else %}
+                    <span>Secure access for library users</span>
+                {% endif %}
+            </div>
+        </header>
         {% block page %}{% endblock %}
     </main>
 </body>
