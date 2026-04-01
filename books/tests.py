@@ -83,7 +83,11 @@ class BorrowFlowTests(TestCase):
         self.assertEqual(Borrow.objects.count(), 0)
 
     def test_return_book_requires_post(self):
-        book = Book.objects.create(title="Python", author="Team", quantity=2)
+        book = Book.objects.create(
+            title="Python",
+            author="Team",
+            quantity=2,
+        )
         borrow = Borrow.objects.create(
             user_name="Cara",
             book=book,
@@ -95,7 +99,11 @@ class BorrowFlowTests(TestCase):
         self.assertEqual(response.status_code, 405)
 
     def test_return_book_marks_returned_and_restores_quantity(self):
-        book = Book.objects.create(title="Python", author="Team", quantity=2)
+        book = Book.objects.create(
+            title="Python",
+            author="Team",
+            quantity=2,
+        )
         borrow = Borrow.objects.create(
             user_name="Cara",
             book=book,
@@ -104,7 +112,9 @@ class BorrowFlowTests(TestCase):
         book.quantity = 1
         book.save()
 
-        response = self.client.post(reverse("return_book", args=[borrow.id]))
+        response = self.client.post(
+            reverse("return_book", args=[borrow.id]),
+        )
 
         self.assertRedirects(response, reverse("book_list"))
         borrow.refresh_from_db()
