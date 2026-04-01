@@ -20,7 +20,11 @@ class BookViewsTests(TestCase):
         self.assertTrue(Book.objects.filter(title="Django Basics").exists())
 
     def test_edit_book_updates_record(self):
-        book = Book.objects.create(title="Old Title", author="Author", quantity=1)
+        book = Book.objects.create(
+            title="Old Title",
+            author="Author",
+            quantity=1,
+        )
 
         response = self.client.post(
             reverse("edit_book", args=[book.id]),
@@ -33,7 +37,11 @@ class BookViewsTests(TestCase):
         self.assertEqual(book.quantity, 4)
 
     def test_delete_book_removes_record(self):
-        book = Book.objects.create(title="Delete Me", author="Author", quantity=1)
+        book = Book.objects.create(
+            title="Delete Me",
+            author="Author",
+            quantity=1,
+        )
 
         response = self.client.post(reverse("delete_book", args=[book.id]))
 
@@ -66,14 +74,21 @@ class BorrowFlowTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Only 1 books available.")
+        self.assertContains(
+            response,
+            "Only 1 books available.",
+        )
         book.refresh_from_db()
         self.assertEqual(book.quantity, 1)
         self.assertEqual(Borrow.objects.count(), 0)
 
     def test_return_book_requires_post(self):
         book = Book.objects.create(title="Python", author="Team", quantity=2)
-        borrow = Borrow.objects.create(user_name="Cara", book=book, quantity=1)
+        borrow = Borrow.objects.create(
+            user_name="Cara",
+            book=book,
+            quantity=1,
+        )
 
         response = self.client.get(reverse("return_book", args=[borrow.id]))
 
@@ -81,7 +96,11 @@ class BorrowFlowTests(TestCase):
 
     def test_return_book_marks_returned_and_restores_quantity(self):
         book = Book.objects.create(title="Python", author="Team", quantity=2)
-        borrow = Borrow.objects.create(user_name="Cara", book=book, quantity=1)
+        borrow = Borrow.objects.create(
+            user_name="Cara",
+            book=book,
+            quantity=1,
+        )
         book.quantity = 1
         book.save()
 

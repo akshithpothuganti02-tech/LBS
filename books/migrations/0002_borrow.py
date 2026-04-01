@@ -7,18 +7,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('books', '0001_initial'),
+        ("books", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Borrow',
+            name="Borrow",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user_name', models.CharField(max_length=100)),
-                ('borrow_date', models.DateField(auto_now_add=True)),
-                ('returned', models.BooleanField(default=False)),
-                ('book', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='books.book')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("user_name", models.CharField(max_length=100)),
+                ("borrow_date", models.DateField(auto_now_add=True)),
+                ("returned", models.BooleanField(default=False)),
+                (
+                    "book",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="books.book",
+                    ),
+                ),
             ],
         ),
     ]
