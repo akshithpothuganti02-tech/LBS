@@ -62,11 +62,19 @@ class BorrowFlowTests(TestCase):
         book.refresh_from_db()
         self.assertEqual(book.quantity, 3)
         self.assertTrue(
-            Borrow.objects.filter(user_name="Alice", book=book, quantity=2).exists()
+            Borrow.objects.filter(
+                user_name="Alice",
+                book=book,
+                quantity=2,
+            ).exists()
         )
 
     def test_borrow_book_rejects_quantity_above_stock(self):
-        book = Book.objects.create(title="Secure App", author="NCI", quantity=1)
+        book = Book.objects.create(
+            title="Secure App",
+            author="NCI",
+            quantity=1,
+        )
 
         response = self.client.post(
             reverse("borrow_book"),
