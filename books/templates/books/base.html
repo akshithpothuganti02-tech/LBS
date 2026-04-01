@@ -415,19 +415,11 @@
 <body>
     <main class="page-shell">
         <header class="topbar">
-            <a class="topbar-brand" href="{% if user.is_authenticated %}{% url 'book_list' %}{% else %}{% url 'login' %}{% endif %}">
+            <a class="topbar-brand" href="{% url 'book_list' %}">
                 Library Management
             </a>
             <div class="topbar-meta">
-                {% if user.is_authenticated %}
-                    <span>Signed in as <strong>{{ user.username }}</strong></span>
-                    <form class="inline-form" method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit">Log Out</button>
-                    </form>
-                {% else %}
-                    <span>Secure access for library users</span>
-                {% endif %}
+                <span>Organize books, borrowing, and returns in one place</span>
             </div>
         </header>
         {% block page %}{% endblock %}
